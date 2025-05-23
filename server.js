@@ -1,10 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const utilisateursRoutes = require('./routes/utilisateurs');
-const reservationsRoutes = require('./routes/reservations');
-const casiersRoutes = require('./routes/casiers');
-const creneauxRoutes = require('./routes/creneaux');
-const authRoutes = require('./routes/auth'); // Ajout des routes d'authentification
+const utilisateursRoutes = require('./src/routes/utilisateurs');
+const reservationsRoutes = require('./src/routes/reservations');
+const casiersRoutes = require('./src/routes/casiers');
+const creneauxRoutes = require('./src/routes/creneaux');
+const authRoutes = require('./src/routes/auth'); // Ajout des routes d'authentification
 
 const app = express();
 const port = 3002;
