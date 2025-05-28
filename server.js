@@ -4,7 +4,7 @@ const utilisateursRoutes = require('./src/routes/utilisateurs');
 const reservationsRoutes = require('./src/routes/reservations');
 const casiersRoutes = require('./src/routes/casiers');
 const creneauxRoutes = require('./src/routes/creneaux');
-const authRoutes = require('./src/routes/auth'); // Ajout des routes d'authentification
+const { router: authRouter } = require('./src/routes/auth'); // Import du routeur d'authentification
 
 const app = express();
 
@@ -20,7 +20,7 @@ app.use('/api/utilisateurs', utilisateursRoutes);
 app.use('/api/reservations', reservationsRoutes);
 app.use('/api/casiers', casiersRoutes);
 app.use('/api/creneaux', creneauxRoutes);
-app.use('/api/auth', authRoutes); // Utilisation des routes d'authentification
+app.use('/api/auth', authRouter); // Utilisation des routes d'authentification
 
 // Route de test
 app.get('/api/status', (req, res) => {
