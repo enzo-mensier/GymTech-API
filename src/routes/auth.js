@@ -9,10 +9,20 @@ function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
-  if (token == null) return res.sendStatus(401);
+  if (token == null) {
+    return res.status(401).json({
+      success: false,
+      message: 'Token d\'authentification manquant'
+    });
+  }
 
   jwt.verify(token, config.jwtSecret, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if (err) {
+      return res.status(403).json({
+        success: false,
+        message: 'Token d\'authentification invalide ou expiré'
+      });
+    }
     req.user = user;
     next();
   });
@@ -23,4 +33,8 @@ router.post('/login', authController.login);
 router.post('/register', authController.register);
 router.get('/me', authenticateToken, authController.getCurrentUser);
 
-module.exports = router;
+// Exporter le routeur et le middleware d'authentification
+module.exports = {
+  router,
+  authenticateToken
+};
