@@ -72,6 +72,8 @@ async function login(req, res) {
       },
       message: 'Connexion réussie'
     };
+    
+    res.status(200).json(response);
 
   } catch (error) {
     console.error(error);
