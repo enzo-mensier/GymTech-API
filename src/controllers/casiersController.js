@@ -59,13 +59,7 @@ async function getCasierById(req, res) {
 async function getCasierByUserId(req, res) {
   try {
     const [rows] = await pool.query(
-      `SELECT c.*, 
-              CASE 
-                WHEN c.id_vestiaire = 1 THEN 'Homme' 
-                ELSE 'Femme' 
-              END as type_vestiaire
-       FROM casiers c 
-       WHERE c.id_utilisateur = ?`, 
+      'SELECT * FROM casiers WHERE id_utilisateur = ?',
       [req.params.userId]
     );
 
@@ -98,18 +92,18 @@ async function getCasierByUserId(req, res) {
 // Créer un nouveau casier
 async function createCasier(req, res) {
   try {
-    const { numero_casier, id_vestiaire, id_utilisateur } = req.body;
+    const { numero_casier, id_utilisateur } = req.body;
     
-    // Vérifier si le numéro de casier existe déjà dans ce vestiaire
+    // Vérifier si le numéro de casier existe déjà
     const [existing] = await pool.query(
-      'SELECT * FROM casiers WHERE numero_casier = ? AND id_vestiaire = ?',
-      [numero_casier, id_vestiaire]
+      'SELECT * FROM casiers WHERE numero_casier = ?',
+      [numero_casier]
     );
     
     if (existing.length > 0) {
       return res.status(400).json({ 
         success: false,
-        message: 'Ce numéro de casier existe déjà dans ce vestiaire' 
+        message: 'Ce numéro de casier est déjà utilisé' 
       });
     }
     
@@ -129,8 +123,8 @@ async function createCasier(req, res) {
     }
     
     const [result] = await pool.query(
-      'INSERT INTO casiers (numero_casier, id_vestiaire, id_utilisateur) VALUES (?, ?, ?)',
-      [numero_casier, id_vestiaire, id_utilisateur || null]
+      'INSERT INTO casiers (numero_casier, id_utilisateur) VALUES (?, ?)',
+      [numero_casier, id_utilisateur || null]
     );
     
     const response = {
@@ -138,7 +132,6 @@ async function createCasier(req, res) {
       data: {
         id: result.insertId,
         numero_casier,
-        id_vestiaire,
         id_utilisateur: id_utilisateur || null
       },
       message: 'Casier créé avec succès'
@@ -158,7 +151,7 @@ async function createCasier(req, res) {
 // Mettre à jour un casier
 async function updateCasier(req, res) {
   try {
-    const { numero_casier, id_vestiaire, id_utilisateur } = req.body;
+    const { numero_casier, id_utilisateur } = req.body;
     const { id } = req.params;
     
     // Vérifier si le casier existe
@@ -171,17 +164,17 @@ async function updateCasier(req, res) {
       });
     }
     
-    // Vérifier si le numéro de casier existe déjà dans ce vestiaire (sauf pour ce casier)
-    if (numero_casier && id_vestiaire) {
+    // Vérifier si le numéro de casier existe déjà (sauf pour ce casier)
+    if (numero_casier) {
       const [existing] = await pool.query(
-        'SELECT * FROM casiers WHERE numero_casier = ? AND id_vestiaire = ? AND id_casier != ?',
-        [numero_casier, id_vestiaire, id]
+        'SELECT * FROM casiers WHERE numero_casier = ? AND id_casier != ?',
+        [numero_casier, id]
       );
       
       if (existing.length > 0) {
         return res.status(400).json({ 
           success: false,
-          message: 'Ce numéro de casier existe déjà dans ce vestiaire' 
+          message: 'Ce numéro de casier est déjà utilisé' 
         });
       }
     }
@@ -203,22 +196,20 @@ async function updateCasier(req, res) {
     
     // Mettre à jour le casier
     await pool.query(
-      'UPDATE casiers SET numero_casier = COALESCE(?, numero_casier), id_vestiaire = COALESCE(?, id_vestiaire), id_utilisateur = ? WHERE id_casier = ?',
+      'UPDATE casiers SET numero_casier = ?, id_utilisateur = ? WHERE id_casier = ?',
       [
-        numero_casier || null,
-        id_vestiaire || null,
-        id_utilisateur || null,
+        numero_casier || casier[0].numero_casier,
+        id_utilisateur !== undefined ? id_utilisateur : casier[0].id_utilisateur,
         id
       ]
     );
     
-    // Récupérer le casier mis à jour
-    const [updatedCasier] = await pool.query('SELECT * FROM casiers WHERE id_casier = ?', [id]);
-    
     const response = {
       success: true,
       data: {
-        casier: updatedCasier[0]
+        id: parseInt(id),
+        numero_casier: numero_casier || casier[0].numero_casier,
+        id_utilisateur: id_utilisateur !== undefined ? id_utilisateur : casier[0].id_utilisateur
       },
       message: 'Casier mis à jour avec succès'
     };

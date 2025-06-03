@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : b5ngvhiao4vdzqoon1ab-mysql.services.clever-cloud.com:3306
--- Généré le : mer. 28 mai 2025 à 09:13
+-- Généré le : mar. 03 juin 2025 à 09:57
 -- Version du serveur : 8.0.22-13
 -- Version de PHP : 8.2.28
 
@@ -30,7 +30,6 @@ SET time_zone = "+00:00";
 CREATE TABLE `casiers` (
   `id_casier` int NOT NULL,
   `numero_casier` int NOT NULL,
-  `id_vestiaire` int NOT NULL,
   `id_utilisateur` int DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -38,14 +37,23 @@ CREATE TABLE `casiers` (
 -- Déchargement des données de la table `casiers`
 --
 
-INSERT INTO `casiers` (`id_casier`, `numero_casier`, `id_vestiaire`, `id_utilisateur`) VALUES
-(1, 101, 1, 1),
-(2, 102, 2, 2),
-(3, 103, 1, 3),
-(4, 104, 2, 4),
-(5, 105, 1, 5),
-(6, 106, 2, 6),
-(7, 107, 1, 7);
+INSERT INTO `casiers` (`id_casier`, `numero_casier`, `id_utilisateur`) VALUES
+(1, 101, 1),
+(2, 102, 2),
+(12, 111, 11),
+(11, 109, 9),
+(10, 107, 7),
+(9, 105, 5),
+(8, 103, 3),
+(13, 113, 13),
+(14, 115, 15),
+(15, 104, 4),
+(16, 106, 6),
+(17, 108, 8),
+(18, 110, 10),
+(19, 112, 12),
+(20, 114, 14),
+(21, 116, 16);
 
 -- --------------------------------------------------------
 
@@ -66,11 +74,11 @@ CREATE TABLE `creneaux` (
 --
 
 INSERT INTO `creneaux` (`id_creneau`, `date_creneau`, `heure_debut`, `heure_fin`, `disponibilite`) VALUES
-(1, '2025-02-05', '09:00:00', '10:00:00', 0),
-(2, '2025-02-05', '10:00:00', '11:00:00', 0),
-(3, '2025-02-06', '14:00:00', '15:00:00', 1),
-(4, '2025-06-30', '10:00:00', '11:00:00', 1),
-(5, '2025-06-30', '12:00:00', '13:00:00', 0);
+(1, '2025-05-28', '08:00:00', '10:00:00', 1),
+(2, '2025-05-28', '10:00:00', '11:00:00', 1),
+(3, '2025-05-28', '11:00:00', '12:00:00', 1),
+(4, '2025-05-28', '14:00:00', '15:00:00', 1),
+(5, '2025-05-29', '08:00:00', '10:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -136,13 +144,9 @@ CREATE TABLE `reservations` (
 --
 
 INSERT INTO `reservations` (`id_reservation`, `id_utilisateur`, `id_creneau`, `date_reservation`) VALUES
-(1, 1, 1, '2025-02-04 07:00:00'),
-(2, 2, 3, '2025-02-04 07:10:00'),
-(3, 3, 2, '2025-02-04 07:15:00'),
-(4, 1, 1, '2025-05-26 11:32:20'),
-(5, 1, 1, '2025-05-26 11:32:57'),
-(6, 1, 5, '2025-05-26 12:20:00'),
-(7, 5, 1, '2025-05-26 12:20:18');
+(17, 1, 4, '2025-06-03 07:41:45'),
+(15, 1, 5, '2025-06-03 07:26:37'),
+(16, 1, 3, '2025-06-03 07:27:14');
 
 -- --------------------------------------------------------
 
@@ -167,26 +171,10 @@ CREATE TABLE `utilisateurs` (
 
 INSERT INTO `utilisateurs` (`id_utilisateur`, `nom`, `prenom`, `email`, `mot_de_passe`, `genre`, `date_naissance`, `date_inscription`) VALUES
 (1, 'mensier', 'enzo', 'enzo@test.com', '$2b$10$YK6P0QRWCY7c7.YvuQytyeJ0JGL3ABxTrWjguT5N3gj72KnS9H1C6', 'Homme', '2005-11-03', '2025-05-28 08:58:37'),
-(2, 'mboumba', 'reine', 'reine@test.com', '$2b$10$JzORibK/8PKNMIgEKJMgZeDwjuaM1noxGJajJ4JN6derdexSkQsfW', 'Femme', '2003-04-01', '2025-05-28 09:00:52');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `vestiaires`
---
-
-CREATE TABLE `vestiaires` (
-  `id_vestiaire` int NOT NULL,
-  `genre` enum('Homme','Femme') NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Déchargement des données de la table `vestiaires`
---
-
-INSERT INTO `vestiaires` (`id_vestiaire`, `genre`) VALUES
-(1, 'Homme'),
-(2, 'Femme');
+(2, 'mboumba', 'reine', 'reine@test.com', '$2b$10$JzORibK/8PKNMIgEKJMgZeDwjuaM1noxGJajJ4JN6derdexSkQsfW', 'Femme', '2003-04-01', '2025-05-28 09:00:52'),
+(3, 'dolium', 'mael', 'mael@test.com', '$2b$10$ixg131Y0u.piMDEtiQbZuuii6Eyq4xf9kqh8niI/ZrD21/nEJIUyu', 'Homme', '2002-02-14', '2025-05-28 10:24:26'),
+(4, 'admin', 'admin', 'admin@test.com', '$2b$10$FvvBTEAXpuGZVQtI8X8HpeFrCf1WrCI2ZPQcpTHfyTaBvwJ3Kyx/S', 'Homme', '2003-04-25', '2025-06-01 10:01:18'),
+(5, 'test', 'test', 'test@test.com', '$2b$10$s3YfqMJHjBqFHH/oh1W8fOjwyDv1EJRr3SYEYS6xAi.FEq4qNH/9S', 'Homme', '2007-03-22', '2025-06-02 07:40:38');
 
 --
 -- Index pour les tables déchargées
@@ -198,8 +186,7 @@ INSERT INTO `vestiaires` (`id_vestiaire`, `genre`) VALUES
 ALTER TABLE `casiers`
   ADD PRIMARY KEY (`id_casier`),
   ADD UNIQUE KEY `numero_casier` (`numero_casier`),
-  ADD UNIQUE KEY `id_utilisateur` (`id_utilisateur`),
-  ADD KEY `id_vestiaire` (`id_vestiaire`);
+  ADD UNIQUE KEY `id_utilisateur` (`id_utilisateur`);
 
 --
 -- Index pour la table `creneaux`
@@ -237,12 +224,6 @@ ALTER TABLE `utilisateurs`
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- Index pour la table `vestiaires`
---
-ALTER TABLE `vestiaires`
-  ADD PRIMARY KEY (`id_vestiaire`);
-
---
 -- AUTO_INCREMENT pour les tables déchargées
 --
 
@@ -250,7 +231,7 @@ ALTER TABLE `vestiaires`
 -- AUTO_INCREMENT pour la table `casiers`
 --
 ALTER TABLE `casiers`
-  MODIFY `id_casier` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_casier` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT pour la table `creneaux`
@@ -274,19 +255,13 @@ ALTER TABLE `performances`
 -- AUTO_INCREMENT pour la table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `id_reservation` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_reservation` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT pour la table `utilisateurs`
 --
 ALTER TABLE `utilisateurs`
-  MODIFY `id_utilisateur` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT pour la table `vestiaires`
---
-ALTER TABLE `vestiaires`
-  MODIFY `id_vestiaire` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_utilisateur` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

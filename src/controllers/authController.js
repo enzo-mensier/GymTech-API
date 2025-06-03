@@ -11,12 +11,7 @@ async function login(req, res) {
     const [rows] = await pool.query(`
       SELECT u.*, 
              c.id_casier, 
-             c.numero_casier, 
-             c.id_vestiaire,
-             CASE 
-               WHEN c.id_vestiaire = 1 THEN 'Homme' 
-               ELSE 'Femme' 
-             END as type_vestiaire
+             c.numero_casier
       FROM utilisateurs u
       LEFT JOIN casiers c ON u.id_utilisateur = c.id_utilisateur
       WHERE u.email = ?
@@ -65,7 +60,6 @@ async function login(req, res) {
           casier: user.id_casier ? {
             id: user.id_casier,
             numero: user.numero_casier,
-            id_vestiaire: user.id_vestiaire,
             type_vestiaire: user.type_vestiaire
           } : null
         }
@@ -142,12 +136,7 @@ async function getCurrentUser(req, res) {
     const [rows] = await pool.query(`
       SELECT u.*, 
              c.id_casier, 
-             c.numero_casier, 
-             c.id_vestiaire,
-             CASE 
-               WHEN c.id_vestiaire = 1 THEN 'Homme' 
-               ELSE 'Femme' 
-             END as type_vestiaire
+             c.numero_casier
       FROM utilisateurs u
       LEFT JOIN casiers c ON u.id_utilisateur = c.id_utilisateur
       WHERE u.id_utilisateur = ?
@@ -178,9 +167,7 @@ async function getCurrentUser(req, res) {
           date_inscription: user.date_inscription,
           casier: user.id_casier ? {
             id: user.id_casier,
-            numero: user.numero_casier,
-            id_vestiaire: user.id_vestiaire,
-            type_vestiaire: user.type_vestiaire
+            numero: user.numero_casier
           } : null
         }
       },
