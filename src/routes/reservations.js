@@ -191,4 +191,70 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Supprimer une réservation et mettre à jour la disponibilité du créneau
+router.delete('/:id', async (req, res) => {
+  const connection = await pool.getConnection();
+  
+  try {
+    await connection.beginTransaction();
+    
+    const reservationId = req.params.id;
+    
+    // 1. Récupérer la réservation pour obtenir l'ID du créneau
+    const [reservationRows] = await connection.query(
+      'SELECT * FROM reservations WHERE id_reservation = ? FOR UPDATE',
+      [reservationId]
+    );
+    
+    if (reservationRows.length === 0) {
+      await connection.rollback();
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Réservation non trouvée' 
+      });
+    }
+    
+    const reservation = reservationRows[0];
+    const creneauId = reservation.id_creneau;
+    
+    // 2. Supprimer la réservation
+    await connection.query(
+      'DELETE FROM reservations WHERE id_reservation = ?',
+      [reservationId]
+    );
+    
+    // 3. Mettre à jour la disponibilité du créneau
+    await connection.query(
+      'UPDATE creneaux SET disponibilite = 1 WHERE id_creneau = ?',
+      [creneauId]
+    );
+    
+    await connection.commit();
+    
+    res.status(200).json({
+      success: true,
+      message: 'Réservation annulée avec succès',
+      creneauId: creneauId
+    });
+    
+  } catch (error) {
+    await connection.rollback();
+    console.error('Erreur lors de l\'annulation de la réservation:', error);
+    
+    let errorMessage = 'Erreur lors de l\'annulation de la réservation';
+    
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      errorMessage = 'Réservation ou créneau invalide';
+    }
+    
+    res.status(500).json({ 
+      success: false, 
+      message: errorMessage,
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  } finally {
+    if (connection) await connection.release();
+  }
+});
+
 module.exports = router;
