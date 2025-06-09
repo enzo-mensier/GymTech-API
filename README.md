@@ -293,15 +293,14 @@ flutter build ios --release
 
 ### Structure de la base de données
 Les principales tables à créer sont :
-- `users` : Gestion des utilisateurs
+- `utilisateurs` : Gestion des utilisateurs
 - `reservations` : Réservations de créneaux
-- `lockers` : Gestion des casiers
-- `sessions` : Sessions utilisateurs
+- `casiers` : Gestion des casiers
 
 ## 📞 Support
 
 Pour toute question ou problème, veuillez contacter l'équipe de développement :
-- Email : [support@gymtech.com](mailto:support@gymtech.com)
+- Email : [support@gymtech.com](mailto:enzo.mensier@gmail.com)
 - Issues GitHub : 
   - [Frontend](https://github.com/enzo-mensier/GymTech-APP/issues)
   - [Backend](https://github.com/enzo-mensier/GymTech-API/issues)
@@ -316,4 +315,4 @@ Pour toute question ou problème, veuillez contacter l'équipe de développement
 - [Documentation Render](https://render.com/docs)
 
 ---
-© 2025 GymTech - Tous droits réservés - Développé avec Flutter, Node.js, Express, MongoDB, hébergé sur Render et Clever Cloud
+© 2025 GymTech - Tous droits réservés - Développé avec Flutter, Node.js, Express, MySQL, hébergé sur Render et Clever Cloud.
