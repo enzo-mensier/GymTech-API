@@ -11,12 +11,17 @@ const app = express();
 // Configuration du port (utilise le port de l'environnement en production, sinon 3002 en développement)
 const port = process.env.PORT || 3002;
 
-// Middleware
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// Configuration CORS
+const corsOptions = {
+  origin: '*', // En production, remplacez par vos domaines autorisés, par exemple : ['https://votredomaine.com', 'https://votreactapp.com']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  credentials: true,
+  optionsSuccessStatus: 200 // Pour les navigateurs plus anciens
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Middleware de logging
 app.use((req, res, next) => {
